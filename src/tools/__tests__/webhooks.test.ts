@@ -39,7 +39,7 @@ describe('Webhooks Tools', () => {
       mockClient.get.mockResolvedValue(mockResponse);
 
       const tools = getListWebhooksTool(mockClient);
-      const tool = tools['webhooks/list'];
+      const tool = tools['webhooks_list'];
       const result = await tool.handler();
 
       expect(mockClient.get).toHaveBeenCalledWith('/webhooks');
@@ -57,7 +57,7 @@ describe('Webhooks Tools', () => {
       mockClient.get.mockResolvedValue(mockResponse);
 
       const tools = getListWebhooksTool(mockClient);
-      const tool = tools['webhooks/list'];
+      const tool = tools['webhooks_list'];
       const result = await tool.handler();
 
       expect(mockClient.get).toHaveBeenCalledWith('/webhooks');
@@ -81,7 +81,7 @@ describe('Webhooks Tools', () => {
       mockClient.get.mockResolvedValue(mockResponse);
 
       const tools = getListWebhooksTool(mockClient);
-      const tool = tools['webhooks/list'];
+      const tool = tools['webhooks_list'];
 
       // Call twice to verify no caching
       await tool.handler();
@@ -95,7 +95,7 @@ describe('Webhooks Tools', () => {
       mockClient.get.mockRejectedValue(new Error('API Error: Unauthorized'));
 
       const tools = getListWebhooksTool(mockClient);
-      const tool = tools['webhooks/list'];
+      const tool = tools['webhooks_list'];
 
       await expect(tool.handler()).rejects.toThrow('API Error: Unauthorized');
     });

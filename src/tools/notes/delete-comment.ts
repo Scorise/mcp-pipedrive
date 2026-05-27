@@ -3,7 +3,7 @@ import { DeleteNoteCommentSchema } from '../../schemas/note.js';
 
 export function getDeleteNoteCommentTool(client: PipedriveClient) {
   return {
-    'notes_delete_comment': {
+    notes_delete_comment: {
       description: `Delete a comment from a note.
 
 Permanently removes a comment from a note.

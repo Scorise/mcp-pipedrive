@@ -27,7 +27,7 @@ describe('Deals Tools', () => {
       mockClient.post.mockResolvedValue(mockResponse);
 
       const tools = getCreateDealTool(mockClient);
-      const tool = tools['deals/create'];
+      const tool = tools['deals_create'];
       const result = await tool.handler({ title: 'Test Deal' });
 
       expect(mockClient.post).toHaveBeenCalledWith('/deals', {
@@ -58,7 +58,7 @@ describe('Deals Tools', () => {
       mockClient.post.mockResolvedValue(mockResponse);
 
       const tools = getCreateDealTool(mockClient);
-      const tool = tools['deals/create'];
+      const tool = tools['deals_create'];
 
       const dealData = {
         title: 'Big Deal',
@@ -82,7 +82,7 @@ describe('Deals Tools', () => {
 
     it('should validate required title field', async () => {
       const tools = getCreateDealTool(mockClient);
-      const tool = tools['deals/create'];
+      const tool = tools['deals_create'];
 
       await expect(tool.handler({})).rejects.toThrow();
       expect(mockClient.post).not.toHaveBeenCalled();
@@ -90,7 +90,7 @@ describe('Deals Tools', () => {
 
     it('should validate negative value', async () => {
       const tools = getCreateDealTool(mockClient);
-      const tool = tools['deals/create'];
+      const tool = tools['deals_create'];
 
       await expect(tool.handler({ title: 'Test', value: -100 })).rejects.toThrow();
       expect(mockClient.post).not.toHaveBeenCalled();
@@ -98,7 +98,7 @@ describe('Deals Tools', () => {
 
     it('should validate probability range', async () => {
       const tools = getCreateDealTool(mockClient);
-      const tool = tools['deals/create'];
+      const tool = tools['deals_create'];
 
       await expect(tool.handler({ title: 'Test', probability: 150 })).rejects.toThrow();
       expect(mockClient.post).not.toHaveBeenCalled();
@@ -106,7 +106,7 @@ describe('Deals Tools', () => {
 
     it('should validate visibility enum', async () => {
       const tools = getCreateDealTool(mockClient);
-      const tool = tools['deals/create'];
+      const tool = tools['deals_create'];
 
       await expect(tool.handler({ title: 'Test', visible_to: '10' })).rejects.toThrow();
       expect(mockClient.post).not.toHaveBeenCalled();
@@ -129,7 +129,7 @@ describe('Deals Tools', () => {
       mockClient.get.mockResolvedValue(mockResponse);
 
       const tools = getGetDealTool(mockClient);
-      const tool = tools['deals/get'];
+      const tool = tools['deals_get'];
       const result = await tool.handler({ id: 1 });
 
       expect(mockClient.get).toHaveBeenCalledWith('/deals/1', undefined, {
@@ -141,7 +141,7 @@ describe('Deals Tools', () => {
 
     it('should validate required id field', async () => {
       const tools = getGetDealTool(mockClient);
-      const tool = tools['deals/get'];
+      const tool = tools['deals_get'];
 
       await expect(tool.handler({})).rejects.toThrow();
       expect(mockClient.get).not.toHaveBeenCalled();
@@ -149,7 +149,7 @@ describe('Deals Tools', () => {
 
     it('should validate positive id', async () => {
       const tools = getGetDealTool(mockClient);
-      const tool = tools['deals/get'];
+      const tool = tools['deals_get'];
 
       await expect(tool.handler({ id: -1 })).rejects.toThrow();
       expect(mockClient.get).not.toHaveBeenCalled();

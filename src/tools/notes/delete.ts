@@ -3,7 +3,7 @@ import { DeleteNoteSchema } from '../../schemas/note.js';
 
 export function getDeleteNoteTool(client: PipedriveClient) {
   return {
-    'notes_delete': {
+    notes_delete: {
       description: `Delete a note from Pipedrive.
 
 Permanently removes a note from all associated entities.

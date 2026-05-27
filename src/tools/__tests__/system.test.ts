@@ -46,7 +46,7 @@ describe('System Tools', () => {
       }));
 
       const tools = getMetricsTool(mockClient);
-      const tool = tools['system/get_metrics'];
+      const tool = tools['system_get_metrics'];
       const result = await tool.handler();
 
       expect(result).toHaveProperty('cacheStats');
@@ -67,7 +67,7 @@ describe('System Tools', () => {
       });
 
       const tools = getMetricsTool(mockClient);
-      const tool = tools['system/get_metrics'];
+      const tool = tools['system_get_metrics'];
 
       await tool.handler();
       await tool.handler();
@@ -87,7 +87,7 @@ describe('System Tools', () => {
       });
 
       const tools = getMetricsTool(mockClient);
-      const tool = tools['system/get_metrics'];
+      const tool = tools['system_get_metrics'];
       const result = await tool.handler();
 
       expect(result.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
@@ -108,7 +108,7 @@ describe('System Tools', () => {
       mockClient.get.mockResolvedValue(mockResponse);
 
       const tools = getHealthCheckTool(mockClient);
-      const tool = tools['system/health_check'];
+      const tool = tools['system_health_check'];
       const result = await tool.handler();
 
       expect(mockClient.get).toHaveBeenCalledWith('/users/me', undefined, {
@@ -124,7 +124,7 @@ describe('System Tools', () => {
       mockClient.get.mockRejectedValue(new Error('API Error: Service unavailable'));
 
       const tools = getHealthCheckTool(mockClient);
-      const tool = tools['system/health_check'];
+      const tool = tools['system_health_check'];
       const result = await tool.handler();
 
       expect(result).toHaveProperty('healthy', false);
@@ -141,7 +141,7 @@ describe('System Tools', () => {
       mockClient.get.mockResolvedValue(mockResponse);
 
       const tools = getHealthCheckTool(mockClient);
-      const tool = tools['system/health_check'];
+      const tool = tools['system_health_check'];
 
       await tool.handler();
 
@@ -157,7 +157,7 @@ describe('System Tools', () => {
       mockClient.getCacheStats.mockReturnValue({ size: 10 });
 
       const tools = getResetCacheTool(mockClient);
-      const tool = tools['system/reset_cache'];
+      const tool = tools['system_reset_cache'];
       const result = await tool.handler();
 
       expect(mockClient.clearCache).toHaveBeenCalledTimes(1);
@@ -170,7 +170,7 @@ describe('System Tools', () => {
       mockClient.getCacheStats.mockReturnValue({ size: 5 });
 
       const tools = getResetCacheTool(mockClient);
-      const tool = tools['system/reset_cache'];
+      const tool = tools['system_reset_cache'];
       const result = await tool.handler();
 
       expect(result.message).toContain('Cache');
@@ -182,7 +182,7 @@ describe('System Tools', () => {
       mockClient.getCacheStats.mockReturnValue({ size: 0 });
 
       const tools = getResetCacheTool(mockClient);
-      const tool = tools['system/reset_cache'];
+      const tool = tools['system_reset_cache'];
       const result = await tool.handler();
 
       expect(result.timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
@@ -195,7 +195,7 @@ describe('System Tools', () => {
       });
 
       const tools = getResetCacheTool(mockClient);
-      const tool = tools['system/reset_cache'];
+      const tool = tools['system_reset_cache'];
 
       await expect(tool.handler()).rejects.toThrow('Cache clear failed');
     });
@@ -207,19 +207,19 @@ describe('System Tools', () => {
       mockClient.getCacheStats.mockReturnValue({ size: 10 });
 
       const metricsTool = getMetricsTool(mockClient);
-      const metricsResult = await metricsTool['system/get_metrics'].handler();
+      const metricsResult = await metricsTool['system_get_metrics'].handler();
 
       expect(metricsResult.cacheStats.size).toBe(10);
 
       // Clear cache
       const resetTool = getResetCacheTool(mockClient);
-      await resetTool['system/reset_cache'].handler();
+      await resetTool['system_reset_cache'].handler();
 
       expect(mockClient.clearCache).toHaveBeenCalled();
 
       // Check cache is cleared
       mockClient.getCacheStats.mockReturnValue({ size: 0 });
-      const metricsAfterReset = await metricsTool['system/get_metrics'].handler();
+      const metricsAfterReset = await metricsTool['system_get_metrics'].handler();
 
       expect(metricsAfterReset.cacheStats.size).toBe(0);
     });
@@ -233,14 +233,14 @@ describe('System Tools', () => {
       mockClient.get.mockResolvedValue(mockHealthResponse);
 
       const healthTool = getHealthCheckTool(mockClient);
-      const healthResult = await healthTool['system/health_check'].handler();
+      const healthResult = await healthTool['system_health_check'].handler();
 
       expect(healthResult.healthy).toBe(true);
 
       // If healthy, proceed with other operations
       if (healthResult.healthy) {
         const metricsTool = getMetricsTool(mockClient);
-        await metricsTool['system/get_metrics'].handler();
+        await metricsTool['system_get_metrics'].handler();
 
         expect(mockClient.getCacheStats).toHaveBeenCalled();
       }

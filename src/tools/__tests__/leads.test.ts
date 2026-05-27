@@ -29,7 +29,7 @@ describe('Leads Tools', () => {
       mockClient.post.mockResolvedValue(mockResponse);
 
       const tools = getCreateLeadTool(mockClient);
-      const tool = tools['leads/create'];
+      const tool = tools['leads_create'];
 
       const leadData = {
         title: 'New Lead',
@@ -59,7 +59,7 @@ describe('Leads Tools', () => {
       mockClient.post.mockResolvedValue(mockResponse);
 
       const tools = getCreateLeadTool(mockClient);
-      const tool = tools['leads/create'];
+      const tool = tools['leads_create'];
 
       const leadData = {
         title: 'Company Lead',
@@ -91,7 +91,7 @@ describe('Leads Tools', () => {
       mockClient.post.mockResolvedValue(mockResponse);
 
       const tools = getCreateLeadTool(mockClient);
-      const tool = tools['leads/create'];
+      const tool = tools['leads_create'];
 
       const leadData = {
         title: 'High Value Lead',
@@ -110,7 +110,7 @@ describe('Leads Tools', () => {
 
     it('should validate required title', async () => {
       const tools = getCreateLeadTool(mockClient);
-      const tool = tools['leads/create'];
+      const tool = tools['leads_create'];
 
       await expect(tool.handler({ person_id: 123 })).rejects.toThrow();
       expect(mockClient.post).not.toHaveBeenCalled();
@@ -130,7 +130,7 @@ describe('Leads Tools', () => {
       mockClient.post.mockResolvedValue(mockResponse);
 
       const tools = getCreateLeadTool(mockClient);
-      const tool = tools['leads/create'];
+      const tool = tools['leads_create'];
 
       const result = await tool.handler({
         title: 'Test Lead',
@@ -171,7 +171,7 @@ describe('Leads Tools', () => {
       mockClient.get.mockResolvedValue(mockResponse);
 
       const tools = getListLeadsTools(mockClient);
-      const tool = tools['leads/list'];
+      const tool = tools['leads_list'];
       const result = await tool.handler({});
 
       expect(mockClient.get).toHaveBeenCalledWith(
@@ -198,7 +198,7 @@ describe('Leads Tools', () => {
       mockClient.get.mockResolvedValue(mockResponse);
 
       const tools = getListLeadsTools(mockClient);
-      const tool = tools['leads/list'];
+      const tool = tools['leads_list'];
       await tool.handler({ start: 50, limit: 25 });
 
       expect(mockClient.get).toHaveBeenCalledWith(
@@ -223,7 +223,7 @@ describe('Leads Tools', () => {
       mockClient.get.mockResolvedValue(mockResponse);
 
       const tools = getListLeadsTools(mockClient);
-      const tool = tools['leads/list'];
+      const tool = tools['leads_list'];
       await tool.handler({ owner_id: 5 });
 
       expect(mockClient.get).toHaveBeenCalledWith(
@@ -235,7 +235,7 @@ describe('Leads Tools', () => {
 
     it('should validate pagination limits', async () => {
       const tools = getListLeadsTools(mockClient);
-      const tool = tools['leads/list'];
+      const tool = tools['leads_list'];
 
       await expect(tool.handler({ limit: 501 })).rejects.toThrow();
       expect(mockClient.get).not.toHaveBeenCalled();

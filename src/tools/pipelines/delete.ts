@@ -3,7 +3,7 @@ import { DeletePipelineSchema } from '../../schemas/pipeline.js';
 
 export function getDeletePipelineTool(client: PipedriveClient) {
   return {
-    'pipelines_delete': {
+    pipelines_delete: {
       description: `Delete a pipeline.
 
 Permanently removes a pipeline and all its stages.
