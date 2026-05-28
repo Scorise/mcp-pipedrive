@@ -443,15 +443,11 @@ describe('numeric coercion (issue #26)', () => {
     });
 
     it('still enforces limit ceiling after coercion', () => {
-      expect(() => PaginationSchema.parse({ limit: '501' })).toThrow(
-        'Limit cannot exceed 500'
-      );
+      expect(() => PaginationSchema.parse({ limit: '501' })).toThrow('Limit cannot exceed 500');
     });
 
     it('still rejects negative start after coercion', () => {
-      expect(() => PaginationSchema.parse({ start: '-1' })).toThrow(
-        'Start must be non-negative'
-      );
+      expect(() => PaginationSchema.parse({ start: '-1' })).toThrow('Start must be non-negative');
     });
   });
 });
