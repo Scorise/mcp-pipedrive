@@ -44,7 +44,7 @@ describe('Filters Tools', () => {
       mockClient.post.mockResolvedValue(mockResponse);
 
       const tools = getCreateFilterTool(mockClient);
-      const tool = tools['filters/create'];
+      const tool = tools['filters_create'];
 
       const filterData = {
         name: 'High Value Deals',
@@ -125,7 +125,7 @@ describe('Filters Tools', () => {
       mockClient.post.mockResolvedValue(mockResponse);
 
       const tools = getCreateFilterTool(mockClient);
-      const tool = tools['filters/create'];
+      const tool = tools['filters_create'];
 
       const filterData = {
         name: 'Complex Filter',
@@ -187,7 +187,7 @@ describe('Filters Tools', () => {
         mockClient.post.mockResolvedValue(mockResponse);
 
         const tools = getCreateFilterTool(mockClient);
-        const tool = tools['filters/create'];
+        const tool = tools['filters_create'];
 
         const filterData = {
           name: `${type} Filter`,
@@ -226,7 +226,7 @@ describe('Filters Tools', () => {
 
     it('should validate required fields', async () => {
       const tools = getCreateFilterTool(mockClient);
-      const tool = tools['filters/create'];
+      const tool = tools['filters_create'];
 
       await expect(tool.handler({ name: 'Test' })).rejects.toThrow();
       await expect(tool.handler({ type: 'deals' })).rejects.toThrow();
@@ -236,7 +236,7 @@ describe('Filters Tools', () => {
 
     it('should validate filter type enum', async () => {
       const tools = getCreateFilterTool(mockClient);
-      const tool = tools['filters/create'];
+      const tool = tools['filters_create'];
 
       await expect(
         tool.handler({

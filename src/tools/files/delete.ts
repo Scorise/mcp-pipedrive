@@ -3,7 +3,7 @@ import { DeleteFileSchema } from '../../schemas/file.js';
 
 export function getDeleteFileTool(client: PipedriveClient) {
   return {
-    'files_delete': {
+    files_delete: {
       description: `Delete a file from Pipedrive.
 
 Permanently removes a file and its associations with entities.

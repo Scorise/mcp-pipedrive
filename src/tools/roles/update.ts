@@ -3,7 +3,7 @@ import { UpdateRoleSchema } from '../../schemas/role.js';
 
 export function getUpdateRoleTool(client: PipedriveClient) {
   return {
-    'roles_update': {
+    roles_update: {
       description: `Update role details.
 
 Updates information for an existing role. Requires admin permissions.

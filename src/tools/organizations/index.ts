@@ -11,6 +11,7 @@ import { createListOrganizationDealsTool } from './deals.js';
 import { createListOrganizationActivitiesTool } from './activities.js';
 import { createListOrganizationFilesTool } from './files.js';
 import { createAddOrganizationFollowerTool } from './add-follower.js';
+import { getListOrganizationFollowersTool } from './list-followers.js';
 import { getBulkDeleteOrganizationsTool } from './bulk.js';
 import { getOrganizationsCollectionTool } from './collection.js';
 import { getListOrganizationChangelogTool, getListOrganizationFlowTool } from './updates.js';
@@ -33,6 +34,7 @@ export function getOrganizationTools(client: PipedriveClient) {
     createListOrganizationActivitiesTool(client),
     createListOrganizationFilesTool(client),
     createAddOrganizationFollowerTool(client),
+    getListOrganizationFollowersTool(client),
     getBulkDeleteOrganizationsTool(client),
     getOrganizationsCollectionTool(client),
     getListOrganizationChangelogTool(client),

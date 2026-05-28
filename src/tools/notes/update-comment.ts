@@ -3,7 +3,7 @@ import { UpdateNoteCommentSchema } from '../../schemas/note.js';
 
 export function getUpdateNoteCommentTool(client: PipedriveClient) {
   return {
-    'notes_update_comment': {
+    notes_update_comment: {
       description: `Update an existing comment on a note.
 
 Modifies the content of a specific comment on a note.

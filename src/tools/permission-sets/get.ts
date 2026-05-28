@@ -3,7 +3,7 @@ import { GetPermissionSetSchema } from '../../schemas/permission-set.js';
 
 export function getGetPermissionSetTool(client: PipedriveClient) {
   return {
-    'permission_sets_get': {
+    permission_sets_get: {
       description: `Get detailed information about a specific permission set by ID.
 
 Retrieves complete information about a single permission set including its contents (individual permissions).
