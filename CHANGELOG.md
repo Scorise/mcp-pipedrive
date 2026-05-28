@@ -1,3 +1,16 @@
+# [2.1.0](https://github.com/iamsamuelfraga/mcp-pipedrive/compare/v2.0.0...v2.1.0) (2026-05-28)
+
+
+### Bug Fixes
+
+* accept string-encoded numeric inputs from MCP clients ([72f7ecc](https://github.com/iamsamuelfraga/mcp-pipedrive/commit/72f7ecc86304918b5bcb54d6f6da0df5014cc0bf))
+* resolve toolset filter for compound names ([72fa9de](https://github.com/iamsamuelfraga/mcp-pipedrive/commit/72fa9de49d035ea70517ad826ac1c5c15c2f838e))
+
+
+### Features
+
+* add organizations_list_followers and OrganizationFields CRUD ([732fde0](https://github.com/iamsamuelfraga/mcp-pipedrive/commit/732fde0bdb8157594738afa4dd8dfe3e41098b30))
+
 # [2.0.0](https://github.com/iamsamuelfraga/mcp-pipedrive/compare/v1.1.6...v2.0.0) (2025-12-11)
 
 
