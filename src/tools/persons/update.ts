@@ -20,6 +20,7 @@ Optional fields (only provide fields you want to change):
 - org_id: Organization this person belongs to
 - email: Array of email addresses with format: [{"value": "john@company.com", "primary": true, "label": "work"}]
 - phone: Array of phone numbers with format: [{"value": "+1234567890", "primary": true, "label": "mobile"}]
+- job_title: Job title / function of the person (max 255 characters)
 - visible_to: Visibility level (1=owner only, 3=entire company, 5=owner's followers, 7=visibility group)
 - marketing_status: Marketing consent status (no_consent, unsubscribed, subscribed, archived)
 
@@ -89,6 +90,10 @@ Note: When updating email/phone arrays, provide the complete array (it replaces 
             required: ['value'],
           },
         },
+        job_title: {
+          type: 'string',
+          description: 'Job title / function of the person (max 255 characters)',
+        },
         visible_to: {
           type: 'string',
           description:
@@ -113,6 +118,7 @@ Note: When updating email/phone arrays, provide the complete array (it replaces 
       if (validated.org_id !== undefined) body.org_id = validated.org_id;
       if (validated.email !== undefined) body.email = validated.email;
       if (validated.phone !== undefined) body.phone = validated.phone;
+      if (validated.job_title !== undefined) body.job_title = validated.job_title;
       if (validated.visible_to !== undefined) body.visible_to = validated.visible_to;
       if (validated.marketing_status !== undefined)
         body.marketing_status = validated.marketing_status;
