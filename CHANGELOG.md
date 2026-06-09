@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/iamsamuelfraga/mcp-pipedrive/compare/v2.1.0...v2.2.0) (2026-06-09)
+
+
+### Features
+
+* add job_title support to persons_create and persons_update ([2ace13d](https://github.com/iamsamuelfraga/mcp-pipedrive/commit/2ace13d681a5824abe3bc0773a412461cab16e2e)), closes [#29](https://github.com/iamsamuelfraga/mcp-pipedrive/issues/29)
+
 # [2.1.0](https://github.com/iamsamuelfraga/mcp-pipedrive/compare/v2.0.0...v2.1.0) (2026-05-28)
 
 
