@@ -124,6 +124,45 @@ describe('Persons Tools', () => {
       ).rejects.toThrow();
       expect(mockClient.post).not.toHaveBeenCalled();
     });
+
+    it('should create a person with job_title', async () => {
+      const mockResponse = {
+        success: true,
+        data: {
+          id: 4,
+          name: 'Alice Carter',
+          job_title: 'Head of Marketing',
+        },
+      };
+
+      mockClient.post.mockResolvedValue(mockResponse);
+
+      const tools = getCreatePersonTool(mockClient);
+      const tool = tools.handler;
+
+      const personData = {
+        name: 'Alice Carter',
+        job_title: 'Head of Marketing',
+      };
+
+      const result = await tool(personData);
+
+      expect(mockClient.post).toHaveBeenCalledWith('/persons', personData);
+      expect(result.content[0].text).toContain('Head of Marketing');
+    });
+
+    it('should reject job_title longer than 255 characters', async () => {
+      const tools = getCreatePersonTool(mockClient);
+      const tool = tools.handler;
+
+      await expect(
+        tool({
+          name: 'Test',
+          job_title: 'x'.repeat(256),
+        })
+      ).rejects.toThrow();
+      expect(mockClient.post).not.toHaveBeenCalled();
+    });
   });
 
   describe('persons/update', () => {
@@ -172,6 +211,29 @@ describe('Persons Tools', () => {
       const tool = tools.handler;
 
       await expect(tool({ id: 999, name: 'Test' })).rejects.toThrow('API Error: Person not found');
+    });
+
+    it('should update a person with job_title', async () => {
+      const mockResponse = {
+        success: true,
+        data: {
+          id: 5,
+          name: 'Updated',
+          job_title: 'VP of Sales',
+        },
+      };
+
+      mockClient.put.mockResolvedValue(mockResponse);
+
+      const tools = getUpdatePersonTool(mockClient);
+      const tool = tools.handler;
+
+      const result = await tool({ id: 5, job_title: 'VP of Sales' });
+
+      expect(mockClient.put).toHaveBeenCalledWith('/persons/5', {
+        job_title: 'VP of Sales',
+      });
+      expect(result.content[0].text).toContain('VP of Sales');
     });
   });
 });

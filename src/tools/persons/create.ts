@@ -19,6 +19,7 @@ Optional fields:
 - org_id: Organization this person belongs to
 - email: Array of email addresses with format: [{"value": "john@company.com", "primary": true, "label": "work"}]
 - phone: Array of phone numbers with format: [{"value": "+1234567890", "primary": true, "label": "mobile"}]
+- job_title: Job title / function of the person (max 255 characters)
 - visible_to: Visibility level (1=owner only, 3=entire company, 5=owner's followers, 7=visibility group)
 - marketing_status: Marketing consent status (no_consent, unsubscribed, subscribed, archived)
 - add_time: Optional creation time in YYYY-MM-DD HH:MM:SS format
@@ -94,6 +95,10 @@ Example email/phone arrays:
             required: ['value'],
           },
         },
+        job_title: {
+          type: 'string',
+          description: 'Job title / function of the person (max 255 characters)',
+        },
         visible_to: {
           type: 'string',
           description:
@@ -123,6 +128,7 @@ Example email/phone arrays:
       if (validated.org_id) body.org_id = validated.org_id;
       if (validated.email) body.email = validated.email;
       if (validated.phone) body.phone = validated.phone;
+      if (validated.job_title) body.job_title = validated.job_title;
       if (validated.visible_to) body.visible_to = validated.visible_to;
       if (validated.marketing_status) body.marketing_status = validated.marketing_status;
       if (validated.add_time) body.add_time = validated.add_time;

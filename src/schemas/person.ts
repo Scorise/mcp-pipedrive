@@ -25,6 +25,11 @@ export const CreatePersonSchema = z
     org_id: OptionalIdSchema.describe('ID of the organization this person belongs to'),
     email: EmailSchema.optional().describe('Email addresses associated with the person'),
     phone: PhoneSchema.optional().describe('Phone numbers associated with the person'),
+    job_title: z
+      .string()
+      .max(255, 'Job title cannot exceed 255 characters')
+      .optional()
+      .describe('Job title / function of the person'),
     visible_to: VisibilitySchema.optional().describe('Visibility of the person'),
     marketing_status: MarketingStatusSchema.optional().describe('Marketing consent status'),
     add_time: z.string().optional().describe('Creation time in ISO 8601 format'),
@@ -49,6 +54,11 @@ export const UpdatePersonSchema = z
     org_id: OptionalIdSchema.describe('ID of the organization this person belongs to'),
     email: EmailSchema.optional().describe('Email addresses associated with the person'),
     phone: PhoneSchema.optional().describe('Phone numbers associated with the person'),
+    job_title: z
+      .string()
+      .max(255, 'Job title cannot exceed 255 characters')
+      .optional()
+      .describe('Job title / function of the person'),
     visible_to: VisibilitySchema.optional().describe('Visibility of the person'),
     marketing_status: MarketingStatusSchema.optional().describe('Marketing consent status'),
   })
