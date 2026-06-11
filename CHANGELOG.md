@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/iamsamuelfraga/mcp-pipedrive/compare/v2.2.0...v2.3.0) (2026-06-11)
+
+
+### Features
+
+* full custom fields support ([#32](https://github.com/iamsamuelfraga/mcp-pipedrive/issues/32)) ([9145736](https://github.com/iamsamuelfraga/mcp-pipedrive/commit/91457368773978202b51fa3e31a87f4b1e23a0af))
+
 ## [Unreleased]
 
 ### Added
