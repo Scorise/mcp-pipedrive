@@ -2,6 +2,8 @@
 
 Custom fields in Pipedrive allow you to extend the standard data model with fields specific to your business. This guide explains how to discover, understand, and use custom fields with the MCP server.
 
+> **New in this release:** Custom fields are now set via a dedicated `custom_fields` object on `*_create` and `*_update` tools, and read back as `custom_fields_resolved` on get/list/search responses. See [Setting Custom Values on Create/Update](#setting-custom-values-on-createupdate) for the modern pattern. The "Using Custom Fields" and "Examples by Entity Type" sections below contain older examples that pass hash keys directly at the top level of payloads — that pattern no longer works for create/update tools, but the field-type reference content is still valid.
+
 ## Table of Contents
 
 - [What Are Custom Fields?](#what-are-custom-fields)
@@ -350,13 +352,18 @@ Claude will:
 3. Include custom fields in the create request
 
 **Explicit (Advanced):**
+
+Custom field values go inside the `custom_fields` object. Pass display names (preferred) or 40-char hash keys.
+
 ```json
 {
   "title": "Acme Corp Deal",
   "value": 50000,
   "currency": "USD",
-  "abc123": 1,
-  "def456": "Website"
+  "custom_fields": {
+    "Industry": "Technology",
+    "Lead Source": "Website"
+  }
 }
 ```
 
@@ -368,18 +375,25 @@ When you get an entity, custom fields are included:
 Get deal #12345
 ```
 
-Response includes:
+The MCP server adds a `custom_fields_resolved` map alongside the raw hash-keyed values for human-readable inspection. Response includes:
+
 ```json
 {
   "id": 12345,
   "title": "Acme Corp Deal",
   "value": 50000,
-  "abc123": "Technology",
-  "def456": "Website"
+  "abc123": 1,
+  "def456": "Website",
+  "custom_fields_resolved": {
+    "Industry": "Technology",
+    "Lead Source": "Website"
+  }
 }
 ```
 
 ## Field Keys vs Field Names
+
+> **You usually don't need this.** The `custom_fields` object resolves names to hash keys automatically. This section describes how the mapping works under the hood — useful for advanced workflows or debugging.
 
 Pipedrive uses hash keys for custom fields in API calls, but displays human-readable names in the UI.
 
@@ -444,10 +458,12 @@ Create a deal for "Enterprise Software Sale" with:
   "title": "Enterprise Software Sale",
   "value": 100000,
   "currency": "USD",
-  "abc123": 1,
-  "def456": 3,
-  "ghi789": "2025-03-31",
-  "jkl012": "Salesforce"
+  "custom_fields": {
+    "Industry": "Technology",
+    "Lead Source": "Referral",
+    "Decision Timeline": "2025-03-31",
+    "Competitor": "Salesforce"
+  }
 }
 ```
 
@@ -472,6 +488,20 @@ Create a contact:
 - VIP Status: Yes
 ```
 
+**API Equivalent:**
+```json
+{
+  "name": "Sarah Johnson",
+  "email": "sarah@techcorp.com",
+  "custom_fields": {
+    "Job Title": "VP of Sales",
+    "Department": "Sales",
+    "LinkedIn URL": "linkedin.com/in/sarahjohnson",
+    "VIP Status": "Yes"
+  }
+}
+```
+
 ### Organization Custom Fields
 
 **Common Organization Fields:**
@@ -492,7 +522,23 @@ Create organization TechCorp with:
 - Founded Year: 2010
 ```
 
+**API Equivalent:**
+```json
+{
+  "name": "TechCorp",
+  "custom_fields": {
+    "Company Size": "200-500 employees",
+    "Industry": "Technology",
+    "Annual Revenue": 50000000,
+    "Website": "techcorp.com",
+    "Founded Year": 2010
+  }
+}
+```
+
 ### Activity Custom Fields
+
+> **Note:** Activity custom field write operations are not supported through the MCP server (Pipedrive's `/activities` endpoint does not accept arbitrary custom field keys). Discover them via `fields_list_activity_fields` but plan workflows around deals/persons/orgs instead.
 
 **Common Activity Fields:**
 - Meeting Type (dropdown: Discovery, Demo, Negotiation)
@@ -508,6 +554,81 @@ Create a call activity:
 - Meeting Type: Discovery
 - Duration: 30 minutes
 ```
+
+## Setting Custom Values on Create/Update
+
+All `*_create` and `*_update` tools for deals, persons, organizations, products and leads accept a `custom_fields` object. Keys can be the display name or the hash key.
+
+### By display name (recommended)
+
+```json
+{
+  "title": "ACME deal",
+  "value": 50000,
+  "custom_fields": {
+    "Industria": "Tech",
+    "Budget": 50000,
+    "Tags": ["Enterprise", "EU"]
+  }
+}
+```
+
+The MCP server resolves names against the cached field definitions and translates `enum`/`set` labels to option ids automatically.
+
+### By hash key (advanced)
+
+```json
+{
+  "title": "ACME deal",
+  "custom_fields": {
+    "abc123def4567890abcdef0123456789abcdef01": "raw value"
+  }
+}
+```
+
+Useful when you have two fields with the same display name (the name path errors with `duplicate_name` in that case).
+
+### Type-specific shapes
+
+| Type | Shape |
+|---|---|
+| `enum` | option label as string |
+| `set` | array of option labels |
+| `date` | `"YYYY-MM-DD"` |
+| `monetary` | number, or `{ "value": 1000, "currency": "EUR" }` |
+| `daterange` | `{ "start": "YYYY-MM-DD", "end": "YYYY-MM-DD" }` |
+| `timerange` | `{ "start": "HH:MM", "end": "HH:MM" }` |
+| `address` | string or structured object |
+
+## Reading Custom Values
+
+`*_get` and `*_list` responses are enriched with a `custom_fields_resolved` object next to the raw payload:
+
+```json
+{
+  "id": 123,
+  "title": "ACME deal",
+  "abc123def456...": 18,
+  "custom_fields_resolved": {
+    "Industria": "Tech"
+  }
+}
+```
+
+Enrichment requires the field definitions cache to be warm (it is warmed automatically by any prior write, or by calling e.g. `fields_list_deal_fields`).
+
+`*_search` responses are also enriched: the inner `item` object inside each `data.items[]` entry receives `custom_fields_resolved` next to its raw fields.
+
+## Managing Custom Field Definitions
+
+CRUD tools are available for all four entity types that support custom fields:
+
+- Deals: `fields_create_deal_field`, `fields_update_deal_field`, `fields_delete_deal_field`, `fields_bulk_delete_deal_fields`
+- Persons: `fields_create_person_field`, `fields_update_person_field`, `fields_delete_person_field`, `fields_bulk_delete_person_fields`
+- Organizations: `fields_create_organization_field`, `fields_update_organization_field`, `fields_delete_organization_field`, `fields_bulk_delete_organization_fields`
+- Products: `fields_create_product_field`, `fields_update_product_field`, `fields_delete_product_field`, `fields_bulk_delete_product_fields`
+
+Leads share their custom field definitions with deals — no separate lead-field CRUD.
 
 ## Best Practices
 

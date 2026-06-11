@@ -1,5 +1,6 @@
 import type { PipedriveClient } from '../../pipedrive-client.js';
 import { UpdateDealSchema, MoveDealStageSchema } from '../../schemas/deal.js';
+import { resolveCustomFieldsForEntity } from '../../utils/custom-fields.js';
 
 export function getUpdateDealTools(client: PipedriveClient) {
   return {
@@ -7,6 +8,11 @@ export function getUpdateDealTools(client: PipedriveClient) {
       description: `Update an existing deal.
 
 Updates one or more fields of an existing deal. Only provide fields you want to change.
+
+Custom fields:
+- Pass display names: { "id": 123, "custom_fields": { "Industria": "Tech", "Budget": 5000 } }
+- Or hash keys directly: { "id": 123, "custom_fields": { "abc123...": "raw value" } }
+- For enum/set fields, pass option labels (not ids).
 
 Workflow tips:
 - Only specify fields you want to update
@@ -48,12 +54,19 @@ Common use cases:
             enum: ['1', '3', '5', '7'],
             description: 'Visibility setting',
           },
+          custom_fields: {
+            type: 'object',
+            description:
+              'Custom field values keyed by display name or hash. See description for format.',
+            additionalProperties: true,
+          },
         },
         required: ['id'],
       },
       handler: async (args: unknown) => {
-        const { id, ...updates } = UpdateDealSchema.parse(args);
-        return client.put(`/deals/${id}`, updates);
+        const { id, custom_fields, ...updates } = UpdateDealSchema.parse(args);
+        const resolved = await resolveCustomFieldsForEntity(client, 'deal', custom_fields);
+        return client.put(`/deals/${id}`, { ...updates, ...resolved });
       },
     },
 
