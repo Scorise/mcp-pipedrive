@@ -88,6 +88,13 @@ const enabledToolsets = process.env.PIPEDRIVE_TOOLSETS
   ? process.env.PIPEDRIVE_TOOLSETS.split(',').map((t) => t.trim())
   : [...DEFAULT_TOOLSETS];
 
+// Individual tool exclusions
+const disabledTools = new Set(
+  process.env.PIPEDRIVE_DISABLED_TOOLS
+    ? process.env.PIPEDRIVE_DISABLED_TOOLS.split(',').map((t) => t.trim())
+    : []
+);
+
 // Helper function to convert array of tools to object
 function arrayToToolsObject(tools: Tool[]): Record<string, Tool> {
   return tools.reduce(
@@ -159,12 +166,17 @@ function isWriteOperation(toolName: string): boolean {
   );
 }
 
-// Filter by toolset and read-only mode
+// Filter by toolset, disabled tools, and read-only mode
 const tools = Object.fromEntries(
   Object.entries(allTools).filter(([name, _tool]) => {
     const toolset = findToolset(name, enabledToolsets);
     if (!toolset) {
       logger.debug('Toolset disabled, skipping tool', { tool: name });
+      return false;
+    }
+
+    if (disabledTools.has(name)) {
+      logger.debug('Tool explicitly disabled, skipping', { tool: name });
       return false;
     }
 
